@@ -6,7 +6,11 @@
 <p>수정일자 : {{ article.updated_at }}</p>
 <hr>
 <p>{{ article.content }}</p>
+<!-- a tag : GET -->
 <a href="{% url 'articles:index' %}">목록으로</a>
-<a href="{% url 'articles:delete' article.pk %}">[X]</a>
-<a href="{% url 'articles:edit' article.pk %}">수정하기</a>
+<form action="{% url 'articles:delete' article.pk %}" method="POST" onclick="return confirm('진짜 지울래?')">
+  {% csrf_token %}
+  <input type="submit" value="삭제">
+</form>
+<a href="{% url 'articles:update' article.pk %}">수정하기</a>
 {% endblock %}
