@@ -1,0 +1,7 @@
+tr > th:nth-of-type(2) {
+  width: 50%;
+}
+
+.title {
+  color:blue;
+}
