@@ -6,7 +6,7 @@
 {% else %}
   <h1>글 수정하기</h1>
 {% endif %}
-<form action="" method="post" class="form">
+<form action="" method="post" class="form", enctype="multipart/form-data">
   {% csrf_token %}
   {% bootstrap_form article_form %}
   {% buttons %}

@@ -20,14 +20,16 @@ def create(request):
         # 저장 로직
         # title = request.POST.get('title')
         # content = request.POST.get('content')
-        article_form = ArticleForm(request.POST)
+        article_form = ArticleForm(request.POST, request.FILES)
         # 검증에 성공하면 저장하고
         if article_form.is_valid():
             # title = article_form.cleaned_data.get('title')
             # content = article_form.cleaned_data.get('content')
             # article = Article(title=title, content=content)
             # article.save()
-            article = article_form.save()
+            article = article_form.save(commit=False)
+            article.image = request.FILES.get('image')
+            article.save()
             return redirect('articles:detail', article.pk)
     
     else:

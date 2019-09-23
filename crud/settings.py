@@ -128,3 +128,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS =[
     os.path.join(BASE_DIR, 'crud', 'assets') # 물리적인 경로이용할때는 BASE_DIR!!
 ]
+
+# medai file이 실제로 저장되는 파일의 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'

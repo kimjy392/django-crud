@@ -14,6 +14,9 @@
 <p>수정일자 : {{ article.updated_at }}</p>
 <hr>
 <p>{{ article.content }}</p>
+{% if article.image %}
+  <img src="{{ article.image.url }}" alt="">
+{% endif %}
 <!-- a tag : GET -->
 <a href="{% url 'articles:index' %}">준영아 목록으로 가자</a>
 <div style="display:inline-block;">

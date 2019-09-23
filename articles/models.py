@@ -15,7 +15,7 @@ class Article(models.Model):
     #    auto_now : 수정시마다 자동으로 저장
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    image = models.ImageField(blank=True)
     def __str__(self):
         return f'{self.id} : {self.title}'
 
