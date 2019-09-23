@@ -1,5 +1,6 @@
 from django.db import models
-
+from imagekit.models import ProcessedImageField, ImageSpecField
+from imagekit.processors import ResizeToFill, ResizeToFit, Thumbnail
 # Create your models here.
 # 1. 모델(스키마) 정의
 # 데이터베이스 테이블을 정의하고,
@@ -16,6 +17,13 @@ class Article(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(blank=True)
+    # ImageSpecField : Input 하나만 받고 처리해서 저장
+    # ProcessedImageField : Input 받은 것을 처리해서 저장
+    image_thumnail = ImageSpecField(
+        processors=[ResizeToFill(300, 300)],
+        format='JPEG',
+        options={'quality': 80}
+    )
     def __str__(self):
         return f'{self.id} : {self.title}'
 
