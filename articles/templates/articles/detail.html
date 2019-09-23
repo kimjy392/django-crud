@@ -1,5 +1,13 @@
 {% extends 'articles/base.html' %}
+{% load bootstrap4 %}
 {% block body %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+</ul>
+{% endif %}
 <h1>{{ article.id }}번 글</h1>
 <h2>{{ article.title }}</h2>
 <p>작성일자 : {{ article.created_at }}</p>
@@ -7,10 +15,40 @@
 <hr>
 <p>{{ article.content }}</p>
 <!-- a tag : GET -->
-<a href="{% url 'articles:index' %}">목록으로</a>
-<form action="{% url 'articles:delete' article.pk %}" method="POST" onclick="return confirm('진짜 지울래?')">
+<a href="{% url 'articles:index' %}">준영아 목록으로 가자</a>
+<div style="display:inline-block;">
+  <form action="{% url 'articles:delete' article.pk %}" method="POST" onclick="return confirm('진짜 지울래?')">
+    {% csrf_token %}
+    <input type="submit" value="삭제">
+  </form>
+</div>
+<a href="{% url 'articles:update' article.pk %}">준영아 수정하자</a>
+<hr>
+<h3>댓글</h3>
+<h6>댓글 수 : {{article.comment_set.count}}</h6>
+
+{% for comment in article.comment_set.all %}
+  <form action="/articles/{{comment.pk}}/comment_delete/" method="POST">
+    {% csrf_token %}
+    <h6>{{comment.id}}.{{ comment.content }}</h6>
+    <input type="submit" value="댓글삭제" class="ml-auto">  
+  </form>
+    {% empty %}
+      <h6>댓글을 작성해주세요</h6>
+{% endfor %}
+<hr>
+<h3>댓글작성</h3>
+<form action="/articles/{{ article.pk }}/comment_create/" method="post" class="form">
   {% csrf_token %}
-  <input type="submit" value="삭제">
+  {% bootstrap_form comment_form %}
+  {% buttons %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+  {% endbuttons %}
 </form>
-<a href="{% url 'articles:update' article.pk %}">수정하기</a>
+
+{% comment %} <form action="/articles/{{article.pk}}/comment_create/", method="POST">
+  {% csrf_token %}
+  <input type="text" name="content">
+  <input type="submit", value="작성~!">
+</form> {% endcomment %}
 {% endblock %}
