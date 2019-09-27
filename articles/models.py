@@ -19,6 +19,8 @@ class Article(models.Model):
     image = models.ImageField(blank=True)
     # ImageSpecField : Input 하나만 받고 처리해서 저장
     # ProcessedImageField : Input 받은 것을 처리해서 저장
+    # resize to fill : 300 * 300
+    # resize to fit : 긴쪽을(너비 혹은 높이) 300에 맞추고 비율에 맞게 자름
     image_thumnail = ImageSpecField(
         processors=[ResizeToFill(300, 300)],
         format='JPEG',
