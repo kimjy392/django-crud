@@ -3,10 +3,10 @@ from django.contrib import messages
 from .models import Article, Comment
 from IPython import embed
 from .forms import ArticleForm, CommentForm
-from IPython import embed 
 
 # Create your views here.
 def index(request):
+    embed()
     articles = Article.objects.order_by('-id')
     context = {
         'articles': articles
