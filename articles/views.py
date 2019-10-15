@@ -6,7 +6,6 @@ from .forms import ArticleForm, CommentForm
 
 # Create your views here.
 def index(request):
-    embed()
     articles = Article.objects.order_by('-id')
     context = {
         'articles': articles
