@@ -52,7 +52,7 @@ def detail(request, article_pk):
         'comment_form' : comment_form
     }
     return render(request, 'articles/detail.html', context)
-
+    
 from django.views.decorators.http import require_POST
 @require_POST
 def delete(request, article_pk):

@@ -1,9 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm # User model form
 from django.contrib.auth.forms import AuthenticationForm # 로그인 form
+from django.contrib.auth.forms import PasswordChangeForm # password change form
+from django.contrib.auth import update_session_auth_hash # session을 update하는데 지금가지는 hash값으로
 from django.contrib.auth import login as auth_login # 로그인 함수를 불러오기
 from django.contrib.auth import logout as auth_logout # 로그아웃 함수 불러오기
+from django.contrib.auth.decorators import login_required # 로그인이 요구되어질때
 from IPython import embed
+from .forms import CustomUserChangeForm
 # Create your views here.
 
 def signup(request):
@@ -15,6 +19,8 @@ def signup(request):
             # form.save()
             # 회원가입하고 바로 로그인이 되어있다.
             user = form.save()
+            print(type(user))
+            embed()
             auth_login(request, user)
             return redirect('articles:index')
         
@@ -49,3 +55,36 @@ def login(request):
 def logout(request):
     auth_logout(request)
     return redirect('articles:index')
+
+@login_required
+def update(request):
+    if request.method == 'POST':
+        # 1. 사용자가 보낸 내용 담아서
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        # 2. 검증
+        if form.is_valid():
+            form.save()
+            return redirect('articles:index')
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+    context = {
+        'form' : form
+    }
+    return render(request, 'accounts/update.html', context)
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            # 비밀번호가 달라졌기 때문에 세션 정보가 달라져서 로그인이 풀린다.
+            # 다음 함수로 로그인을 유지한다.
+            update_session_auth_hash(request, form.user)
+            return redirect('articles:index')
+    else:
+        form = PasswordChangeForm(request.user)
+    context = {
+        'form' : form
+    }
+    return render(request, 'accounts/update.html', context)
