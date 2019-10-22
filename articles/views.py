@@ -28,6 +28,7 @@ def create(request):
             # article = Article(title=title, content=content)
             # article.save()
             article = article_form.save(commit=False)
+            article.user = request.user
             article.image = request.FILES.get('image')
             article.save()
             return redirect('articles:detail', article.pk)
@@ -35,6 +36,7 @@ def create(request):
     else:
         # GET 요청 -> Form
         article_form = ArticleForm()
+        article_form.user = request.user
         # GET - > 비어있는 Form  context
         # POST -> 검증 실패시 에러메세지와 입력값 채워진 Form context
     context = {
@@ -87,6 +89,7 @@ def comment_create(request, article_pk):
         comment = comment_form.save(commit=False)
         # 3-2. FK 넣고 저장
         comment.article = article
+        comment.user = request.user
         comment.save()
         messages.info(request, '댓글이 생성되었습니다.')
     else:

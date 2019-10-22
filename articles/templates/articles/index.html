@@ -15,6 +15,7 @@
         <th scope="col">#</th>
         <th scope="col">제목</th>
         <th scope="col">작성일자</th>
+        <th scope="col">작성자</th>
       </tr>
     </thead>
     <tbody>
@@ -27,6 +28,7 @@
           </a>
         </td>
         <td>{{ article.created_at }}</td>
+        <td>{{ article.user }}</td>
       </tr>
       {% endfor %}
     </tbody>

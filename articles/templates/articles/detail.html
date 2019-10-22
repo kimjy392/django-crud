@@ -34,7 +34,7 @@
 {% for comment in article.comment_set.all %}
   <form action="/articles/{{comment.pk}}/comment_delete/" method="POST">
     {% csrf_token %}
-    <h6>{{comment.id}}.{{ comment.content }}</h6>
+    <h6>{{comment.id}}.{{ comment.content }} {{ comment.user }}</h6>
     <input type="submit" value="댓글삭제" class="ml-auto">  
   </form>
     {% empty %}

@@ -138,3 +138,4 @@ MEDIA_URL = '/media/'
 
 # AUTH
 LOGIN_URL = '/accounts/login/' # @login_required에서 사용하면 로그인이 되어있지 않다면 이 URL로 간다.(default = /accounts/login/)
+AUTH_USER_MODEL = 'accounts.User' # default - 'auth.User'

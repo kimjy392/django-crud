@@ -6,6 +6,7 @@ from django.contrib.auth import update_session_auth_hash # session을 update하�
 from django.contrib.auth import login as auth_login # 로그인 함수를 불러오기
 from django.contrib.auth import logout as auth_logout # 로그아웃 함수 불러오기
 from django.contrib.auth.decorators import login_required # 로그인이 요구되어질때
+from .forms import CustomUserCreationForm
 from IPython import embed
 from .forms import CustomUserChangeForm
 # Create your views here.
@@ -14,7 +15,7 @@ def signup(request):
     if request.user.is_authenticated:
         return redirect('articles:index')
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             # form.save()
             # 회원가입하고 바로 로그인이 되어있다.
@@ -25,7 +26,7 @@ def signup(request):
             return redirect('articles:index')
         
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     context = {
         'form' : form
     }

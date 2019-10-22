@@ -29,6 +29,7 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = '__all__'
+        exclude = ('user',)
         # 위젯 설정 2
 #         widget=forms.TextInput(
 #             attrs={
@@ -66,4 +67,4 @@ class CommentForm(forms.ModelForm):
     content = forms.CharField(max_length=140)
     class Meta:
         model = Comment
-        exclude = ('article', )
+        exclude = ('article', 'user')
