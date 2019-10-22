@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from .models import Article, Comment
 from IPython import embed
 from .forms import ArticleForm, CommentForm
+from django.core.exceptions import PermissionDenied # 에러를 발생하게 한다.(raise)
+from django.http import HttpResponseForbidden # 에러 발생 403(return)
 
 # Create your views here.
 def index(request):
@@ -15,6 +18,8 @@ def index(request):
 
 @login_required
 def create(request):
+    if not request.user.is_authenticated:
+        return redirect('articles:index')
     if request.method == 'POST':
         # POST 요청 -> 검증 및 저장
         # 저장 로직
@@ -55,14 +60,20 @@ def detail(request, article_pk):
     }
     return render(request, 'articles/detail.html', context)
     
-from django.views.decorators.http import require_POST
+
 @require_POST
 def delete(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
-    article.delete()
-    return redirect('articles:index')
+    # 작성자와 사용자가 같다면
+    if article.user == request.user:
+        article = get_object_or_404(Article, pk=article_pk)
+        article.delete()
+        return redirect('articles:index')
+    else:
+        # 다르다면 에러
+        raise PermissionDenied
 
 
+@login_required
 def update(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     if request.method == 'POST':
@@ -78,6 +89,8 @@ def update(request, article_pk):
     }
     return render(request, 'articles/form.html', context)
 
+@login_required
+@require_POST
 def comment_create(request, article_pk):
     article = get_object_or_404(Article, pk=article_pk)
     # 1. modelform에 사용자 입력값 넣고
@@ -98,9 +111,13 @@ def comment_create(request, article_pk):
     # comment = Comment.objects.create(content=request.POST.get('content'), article_id=article_pk)
  
 
+@require_POST
 def comment_delete(request, comment_pk):
     comment = Comment.objects.get(pk=comment_pk)
-    article_pk = comment.article.pk
-    comment.delete()
-    messages.info(request, '댓글이 삭제되었습니다.')
-    return redirect('articles:detail', article_pk)
+    if comment.user == request.user:
+        article_pk = comment.article.pk
+        comment.delete()
+        messages.info(request, '댓글이 삭제되었습니다.')
+        return redirect('articles:detail', article_pk)
+    else:
+        return HttpResponseForbidden('이렇게 들어오려고 하지마')
