@@ -16,9 +16,9 @@
 <p>{{ article.content }}</p>
 <p>{{ article.like_users.all.count }} 명이 이 글을 좋아합니다.</p>
 {% if user not in article.like_users.all %}
-<a href="{% url 'articles:like' article.pk %}">좋아요</a>
+<a href="{% url 'articles:like' article.pk %}"><i class=" animated rubberBand fas fa-heart" style="color : red"></i></a>
 {% else %}
-<a href="{% url 'articles:like' article.pk %}">좋아요 취소</a>
+<a href="{% url 'articles:like' article.pk %}"><i class=" animated rubberBand far fa-heart" style=" color : red"></i></a>
 {% endif %}
 {% if article.image %}
   <img src="{{ article.image.url }}" alt="">

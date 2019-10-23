@@ -29,7 +29,7 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = '__all__'
-        exclude = ('user',)
+        exclude = ('user', 'like_users',)
         # 위젯 설정 2
 #         widget=forms.TextInput(
 #             attrs={

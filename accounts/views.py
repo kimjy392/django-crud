@@ -7,6 +7,8 @@ from django.contrib.auth import login as auth_login # 로그인 함수를 불러
 from django.contrib.auth import logout as auth_logout # 로그아웃 함수 불러오기
 from django.contrib.auth.decorators import login_required # 로그인이 요구되어질때
 from .forms import CustomUserCreationForm
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 from IPython import embed
 from .forms import CustomUserChangeForm
 # Create your views here.
@@ -89,3 +91,12 @@ def password_change(request):
         'form' : form
     }
     return render(request, 'accounts/update.html', context)
+    
+def profile(request, account_pk):
+    # user = User.objects.get(pk=account_pk)
+    User = get_user_model()
+    user = get_object_or_404(User, pk=account_pk)
+    context = {
+        'user_profile' : user
+    }
+    return render(request, 'accounts/profile.html', context)

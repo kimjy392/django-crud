@@ -1,0 +1,28 @@
+{% extends 'articles/base.html' %}
+{% block body %}
+    {% if request.user == user_porfile %}
+    <h4>작성한 글({{ user_profile.article_set.all.count }})</h4>
+    {% for article in user_profile.article_set.all %}
+        <a href="{% url 'articles:detail' article.pk %}">
+            {{ article.pk }} : {{ article.title }}
+        </a>
+    {% endfor %}
+    <hr>
+    <h4>작성한 댓글({{ user_profile.comment_set.all.count }})</h4>
+    {% for comment in user_profile.comment_set.all %}
+        <p>
+            <a href="{% url 'articles:detail' comment.article.id %}">
+                {{ comment.article_id }} 글의 {{ comment.content }}
+            </a>
+        </p>
+    {% endfor %}
+    <hr>
+    <h4>좋아요한 글({{ user_profile.like_articles.count }})</h4>
+    {% for article in user_profile.like_articles.all %}
+        <ol>
+            <li>{{article.title}}</li>
+        </ol>
+    {% endfor %}
+    {% endif %}
+
+{% endblock %}
