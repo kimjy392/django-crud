@@ -20,6 +20,7 @@ class Article(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # settings.AUTH_USER_MODEL : 'accounts.User' (str)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles', blank=True) # user와 겹칠수도 있기 떄문에 related_name쓰기
 
     image = models.ImageField(blank=True)
     # ImageSpecField : Input 하나만 받고 처리해서 저장
@@ -31,6 +32,8 @@ class Article(models.Model):
         format='JPEG',
         options={'quality': 80}
     )
+
+
     def __str__(self):
         return f'{self.id} : {self.title}'
 

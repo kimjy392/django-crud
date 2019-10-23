@@ -121,3 +121,17 @@ def comment_delete(request, comment_pk):
         return redirect('articles:detail', article_pk)
     else:
         return HttpResponseForbidden('이렇게 들어오려고 하지마')
+
+
+@login_required
+def like(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    # 좋아요를 누른적이 있다면
+    if request.user in article.like_users.all():
+        # 좋아요 취소 로직
+        article.like_users.remove(request.user)
+    # 아니면
+    else:
+        # 좋아요 로직
+        request.user.like_articles.add(article)
+    return redirect('articles:detail', article_pk)
