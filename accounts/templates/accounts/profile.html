@@ -1,6 +1,28 @@
 {% extends 'articles/base.html' %}
 {% block body %}
-    {% if request.user == user_porfile %}
+{% comment %} <a href="{% url 'accounts:follow' user_profile.pk %}">
+   {% if user in user_profile.followers.all %}
+   팔로우취소
+   {% else %}
+   팔로우
+   {% endif %}
+</a>
+<h2>팔로우: {{user_profile.followings.all.count}}</h2>
+<h2>팔로워: {{user_profile.followers.all.count}}</h2> {% endcomment %}
+
+      {% with user_profile.followers.all as followers %}
+    <a href="{% url 'accounts:follow' user_profile.pk %}">
+        {% if user in followers %}
+            팔로우취소
+        {% else %}
+            팔로우
+        {% endif %}
+    </a>
+    
+    <h4>팔로우 : {{ user_profile.followings.all.count }}</h4>
+    <h4>팔로워 : {{ followers | length }}</h4>
+    {% endwith %}
+    {% if request.user == user_profile %}
     <h4>작성한 글({{ user_profile.article_set.all.count }})</h4>
     {% for article in user_profile.article_set.all %}
         <a href="{% url 'articles:detail' article.pk %}">
@@ -24,5 +46,4 @@
         </ol>
     {% endfor %}
     {% endif %}
-
 {% endblock %}

@@ -91,7 +91,7 @@ def password_change(request):
         'form' : form
     }
     return render(request, 'accounts/update.html', context)
-    
+
 def profile(request, account_pk):
     # user = User.objects.get(pk=account_pk)
     User = get_user_model()
@@ -100,3 +100,17 @@ def profile(request, account_pk):
         'user_profile' : user
     }
     return render(request, 'accounts/profile.html', context)
+
+@login_required
+def follow(request, account_pk):
+    User = get_user_model()
+    obama = get_object_or_404(User, pk=account_pk)
+    if request.user != obama:
+        # obama을 팔로우 한적 있다면
+        if request.user in obama.followers.all():
+            # 취소
+            obama.followers.remove(request.user)
+        else:
+            obama.followers.add(request.user)
+    return redirect('accounts:profile', account_pk)
+    
