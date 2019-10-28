@@ -37,6 +37,7 @@ def create(request):
             article.user = request.user
             article.image = request.FILES.get('image')
             article.save()
+            # 해시태그 저장 및 연결 작업
             return redirect('articles:detail', article.pk)
 
     else:
