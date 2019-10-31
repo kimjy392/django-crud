@@ -39,6 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',  # messages framwork
     'django.contrib.staticfiles', # static file! css, js, image
+    # all-auth
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.kakao', # 카카오 사용
+    # all-auth end
     'django_extensions',
     'bootstrap4',
     'imagekit',
@@ -139,3 +146,10 @@ MEDIA_URL = '/media/'
 # AUTH
 LOGIN_URL = '/accounts/login/' # @login_required에서 사용하면 로그인이 되어있지 않다면 이 URL로 간다.(default = /accounts/login/)
 AUTH_USER_MODEL = 'accounts.User' # default - 'auth.User'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SITE_ID = 1 # 'django.contrib.sites -> SITE_ID 부여
+LOGIN_REDIRECT_URL = 'articles:index'

@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('articles/', include('articles.urls')),
     path('accounts/', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')), # 반드시 기존 accounts app 밑에(view 함수가 위에서 부터 읽어가기때문에 우리 설정을 먼저 실행되게)
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

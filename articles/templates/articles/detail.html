@@ -14,11 +14,12 @@
 <p>수정일자 : {{ article.updated_at }}</p>
 <hr>
 <p>{{ article.content }}</p>
-<p>{{ article.like_users.all.count }} 명이 이 글을 좋아합니다.</p>
-{% if user not in article.like_users.all %}
-<a href="{% url 'articles:like' article.pk %}"><i class=" animated rubberBand fas fa-heart" style="color : red"></i></a>
+<p><span id="like-count">{{ article.like_users.all.count }}</span> 명이 이 글을 좋아합니다.</p>
+{% if user in article.like_users.all %}
+<i id="like-button" data-id="{{ article.id }}" class=" fas fa-heart animated rubberBand" style="color : red"></i>
+{% comment %} data-hi="bye" 라고하면 dataset.hi에 "bye가 들어있어" {% endcomment %}
 {% else %}
-<a href="{% url 'articles:like' article.pk %}"><i class=" animated rubberBand far fa-heart" style=" color : red"></i></a>
+<i id="like-button" data-id="{{ article.id }}" class=" far fa-heart animated rubberBand" style=" color : red"></i>
 {% endif %}
 {% if article.image %}
   <img src="{{ article.image.url }}" alt="">
@@ -69,4 +70,29 @@
   <input type="text" name="content">
   <input type="submit", value="작성~!">
 </form> {% endcomment %}
+{% endblock %}
+
+{% block script %}
+<script>
+  const likeButton = document.querySelector('#like-button')
+  const likeCount = document.querySelector('#like-count')
+  likeButton.addEventListener('click', function(event) {
+    console.log(event.target.dataset)
+    axios.get(`/articles/${event.target.dataset.id}/like/`)
+      .then(response => {
+        console.log(response)
+        console.log(event.target)
+        if (response.data.is_liked) {
+          event.target.classList.remove('far')
+          event.target.classList.add('fas')
+        }
+        else {
+          event.target.classList.remove('fas')
+          event.target.classList.add('far')
+        }
+        likeCount.innerText = response.data.like_users
+      })
+  })
+  
+</script>
 {% endblock %}

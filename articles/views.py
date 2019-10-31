@@ -7,7 +7,7 @@ from IPython import embed
 from .forms import ArticleForm, CommentForm
 from django.core.exceptions import PermissionDenied # 에러를 발생하게 한다.(raise)
 from django.http import HttpResponseForbidden # 에러 발생 403(return)
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 # Create your views here.
 def index(request):
@@ -134,8 +134,10 @@ def like(request, article_pk):
     if request.user in article.like_users.all():
         # 좋아요 취소 로직
         article.like_users.remove(request.user)
+        is_liked = False
     # 아니면
     else:
         # 좋아요 로직
         request.user.like_articles.add(article)
-    return redirect('articles:detail', article_pk)
+        is_liked = True
+    return JsonResponse({'is_liked' : is_liked, 'like_users':article.like_users.count()})
