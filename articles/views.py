@@ -129,15 +129,18 @@ def comment_delete(request, comment_pk):
 # request.user를 사용하려면 @login_required 나 authenticated을 사용해서 로그인이 되어있는지 확인해야한다!(로그인이 안되어 있을 경우도 생각해서 request.user는 )
 @login_required
 def like(request, article_pk):
-    article = Article.objects.get(pk=article_pk)
-    # 좋아요를 누른적이 있다면
-    if request.user in article.like_users.all():
-        # 좋아요 취소 로직
-        article.like_users.remove(request.user)
-        is_liked = False
-    # 아니면
+    if request.is_ajax():
+        article = Article.objects.get(pk=article_pk)
+        # 좋아요를 누른적이 있다면
+        if request.user in article.like_users.all():
+            # 좋아요 취소 로직
+            article.like_users.remove(request.user)
+            is_liked = False
+        # 아니면
+        else:
+            # 좋아요 로직
+            request.user.like_articles.add(article)
+            is_liked = True
+        return JsonResponse({'is_liked' : is_liked, 'like_users':article.like_users.count()})
     else:
-        # 좋아요 로직
-        request.user.like_articles.add(article)
-        is_liked = True
-    return JsonResponse({'is_liked' : is_liked, 'like_users':article.like_users.count()})
+        HttpResponseForbidden()
